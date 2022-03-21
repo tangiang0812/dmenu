@@ -8,7 +8,7 @@ static int min_width = 1000;                    /* minimum width when centered *
 static char *fonts[] = {
 	"monospace:size=10"
 };
-static const char *prompt      = NULL;      /* -p  option; prompt to the left of input field */
+static const char *prompt      = "Run:";      /* -p  option; prompt to the left of input field */
 
 static const unsigned int baralpha = 0xd9;
 static const unsigned int borderalpha = OPAQUE;
