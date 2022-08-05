@@ -95,7 +95,7 @@ calcoffsets(void)
 	if (lines > 0)
 		n = lines * bh;
 	else
-		n = mw - (promptw + inputw + TEXTW("<") + TEXTW(">"));
+		n = mw - (promptw + inputw + TEXTW("<") + TEXTW(">") - TEXTW(numbers));
 	/* calculate which items will begin the next page and previous page */
 	for (i = 0, next = curr; next; next = next->right)
 		if ((i += (lines > 0) ? bh : MIN(TEXTW(next->text), n)) > n)
@@ -727,7 +727,7 @@ buttonpress(XEvent *e)
 		/* horizontal list: (ctrl)left-click on item */
 		for (item = curr; item != next; item = item->right) {
 			x += w;
-			w = MIN(TEXTW(item->text), mw - x - TEXTW(">"));
+			w = MIN(TEXTW(item->text), mw - x - TEXTW(">") - TEXTW(numbers));
 			if (ev->x >= x && ev->x <= x + w) {
 				puts(item->text);
 				if (!(ev->state & ControlMask))
@@ -742,7 +742,7 @@ buttonpress(XEvent *e)
 		}
 		/* left-click on right arrow */
 		w = TEXTW(">");
-		x = mw - w;
+		x = mw - w - TEXTW(numbers);
 		if (next && ev->x >= x && ev->x <= x + w) {
 			sel = curr = next;
 			calcoffsets();
@@ -775,7 +775,7 @@ mousemove(XEvent *e)
 		w = TEXTW("<");
 		for (item = curr; item != next; item = item->right) {
 			x += w;
-			w = MIN(TEXTW(item->text), mw - x - TEXTW(">"));
+			w = MIN(TEXTW(item->text), mw - x - TEXTW(">") - TEXTW(numbers));
 			if (ev->x >= x && ev->x <= x + w) {
 				sel = item;
 				calcoffsets();
@@ -1006,7 +1006,7 @@ setup(void)
 	swa.background_pixel = 0;
 	swa.colormap = cmap;
 	swa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask | ButtonPressMask | PointerMotionMask;
-	win = XCreateWindow(dpy, parentwin, x, y, mw, mh, border_width,
+	win = XCreateWindow(dpy, parentwin, x, y, mw - 2 * border_width, mh, border_width,
 	                    depth, InputOutput, visual,
 	                    CWOverrideRedirect|CWBackPixel|CWBorderPixel|CWColormap|CWEventMask, &swa);
 	XSetWindowBorder(dpy, win, scheme[SchemeSel][ColBg].pixel);
